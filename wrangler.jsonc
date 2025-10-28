@@ -4,7 +4,7 @@
  */
  {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "edgemetrics-dashboar-1vdvm1x5qqbhtfpi0oqpn",
+	"name": "mock-social-media-ad-perfomance-dashboard",
 	"main": "worker/index.ts",
 	"compatibility_date": "2025-04-24",
 	"assets": {
