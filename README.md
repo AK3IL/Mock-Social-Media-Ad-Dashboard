@@ -14,11 +14,12 @@ A visually stunning, information-dense dashboard for monitoring paid and organic
 -   **State Management**: Zustand
 -   **Icons**: Lucide React
 -   **Animation**: Framer Motion
--   **Backend**: Hono for Serverless Functions
+-   **Backend**: Python Flask API (Vercel serverless functions)
 ## Getting Started
 Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
 ### Prerequisites
--   [Bun](https://bun.sh/) (v1.0 or higher)
+-   [Node.js](https://nodejs.org/) (v18 or higher) or [Bun](https://bun.sh/)
+-   [Python](https://www.python.org/) (v3.9 or higher)
 -   [Git](https://git-scm.com/)
 ### Installation
 1.  **Clone the repository:**
@@ -26,43 +27,100 @@ Follow these instructions to get a copy of the project up and running on your lo
     git clone <repository-url>
     cd social-media-dashboard
     ```
-2.  **Install dependencies:**
-    The project uses Bun as the package manager.
+2.  **Install frontend dependencies:**
+    Using npm:
+    ```bash
+    npm install
+    ```
+    Or using Bun:
     ```bash
     bun install
     ```
+3.  **Install Python dependencies (for local development):**
+    ```bash
+    pip install -r requirements.txt
+    ```
 ### Running the Development Server
-To start the local development server, run the following command:
+**Option 1: Run both frontend and backend separately**
+1.  Start the Python API server:
+    ```bash
+    python api/index.py
+    ```
+    The API will be available at `http://localhost:5000`.
+2.  In a separate terminal, start the frontend:
+    ```bash
+    npm run dev
+    # or
+    bun run dev
+    ```
+    The application will be available at `http://localhost:3000`.
+**Option 2: Use Vercel CLI for local development** (Recommended)
 ```bash
-bun run dev
+npm install -g vercel
+vercel dev
 ```
-The application will be available at `http://localhost:3000`.
+This will run both the frontend and API together, simulating the production environment.
 ## Project Structure
 -   `src/`: Contains the frontend React application.
     -   `pages/`: Main page components.
     -   `components/`: Reusable UI components, including shadcn/ui components.
     -   `lib/`: Utility functions and libraries.
     -   `hooks/`: Custom React hooks.
--   `worker/`: Contains the backend serverless function code.
-    -   `index.ts`: The entry point for the worker.
-    -   `userRoutes.ts`: The place to define custom API routes.
+-   `api/`: Contains the Python Flask backend.
+    -   `index.py`: The main Flask application with API endpoints.
+-   `vercel.json`: Vercel deployment configuration for Python + React.
+-   `requirements.txt`: Python dependencies.
 ## Development
 ### Frontend
 The frontend is a standard Vite + React application. All components and pages are located in the `src` directory. Styling is handled via Tailwind CSS and shadcn/ui.
 ### Backend
-The backend API is powered by a serverless function using the Hono framework. To add or modify API endpoints, edit the `worker/userRoutes.ts` file.
+The backend API is a Python Flask application deployed as Vercel serverless functions. The API provides two main endpoints:
+-   `/api/paid-performance`: Returns KPI and platform performance data for paid social media
+-   `/api/organic-performance`: Returns KPI and platform performance data for organic social media
+-   `/api/health`: Health check endpoint
+To modify the API, edit the `api/index.py` file.
 ### Available Scripts
--   `bun run dev`: Starts the Vite development server.
--   `bun run build`: Builds the application for production.
--   `bun run lint`: Lints the codebase using ESLint.
--   `bun run deploy`: Deploys the application.
-## Deployment
-This project is configured for seamless deployment to a serverless platform.
-To deploy your application, simply run the deploy script:
-```bash
-bun run deploy
-```
-This command will build the application and deploy it using the pre-configured deployment tool.
+-   `npm run dev` or `bun run dev`: Starts the Vite development server.
+-   `npm run build` or `bun run build`: Builds the frontend for production.
+-   `npm run lint` or `bun run lint`: Lints the codebase using ESLint.
+-   `vercel dev`: Runs both frontend and backend locally (requires Vercel CLI).
+-   `vercel --prod`: Deploys to Vercel production.
+## Deployment to Vercel
+This project is configured for seamless deployment to Vercel with a Python Flask backend and React frontend.
+### Prerequisites
+-   A [Vercel account](https://vercel.com/signup)
+-   [Vercel CLI](https://vercel.com/docs/cli) installed (optional but recommended)
+### Deploy with Vercel CLI (Recommended)
+1.  **Install Vercel CLI** (if not already installed):
+    ```bash
+    npm install -g vercel
+    ```
+2.  **Login to Vercel:**
+    ```bash
+    vercel login
+    ```
+3.  **Deploy the project:**
+    ```bash
+    vercel
+    ```
+    Follow the prompts to configure your deployment. On the first deployment, Vercel will ask you to confirm project settings.
+4.  **Deploy to production:**
+    ```bash
+    vercel --prod
+    ```
+### Deploy via Vercel Dashboard
+1.  Push your code to a Git repository (GitHub, GitLab, or Bitbucket)
+2.  Go to [Vercel Dashboard](https://vercel.com/dashboard)
+3.  Click "New Project"
+4.  Import your repository
+5.  Vercel will automatically detect the configuration from `vercel.json`
+6.  Click "Deploy"
+### Environment Configuration
+The project uses `vercel.json` which configures:
+-   Python Flask API at `/api/*` routes
+-   Static React frontend at all other routes
+-   Automatic builds for both frontend and backend
+No additional environment variables are required for basic deployment.
 ## Contributing
 Contributions are welcome! Please feel free to open an issue or submit a pull request.
 1.  Fork the Project
